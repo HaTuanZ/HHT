@@ -1,0 +1,1 @@
+{"customers": [{"Avg. Session Length": 25.734271084705032}, {"Time on App": 38.70915381083432}, {"Time on Website": 0.4367388355942645}, {"Length of Membership": 61.577323754878336}]}
