@@ -11,7 +11,13 @@ function chartxyz(data, title){
         credits: {
             enabled: false
         },
-    
+        exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false
+                }
+            }
+        },
         xAxis: [{
             title: {
                 text: 'Data'
@@ -28,12 +34,7 @@ function chartxyz(data, title){
         yAxis: [{
             title: {
                 text: null
-            },
-            labels: {
-                formatter: function() {
-                  return ((this.value / numItems) * 100).toFixed(2) + '%';
-                }
-              }
+            }
         }, {
             title: {
                 text: null
@@ -60,4 +61,47 @@ function chartxyz(data, title){
             color:'#000000'
         }]
     });
+}
+
+function chartabc(dataR, dataP){
+    console.log(dataR)
+    console.log(dataP)
+    Highcharts.chart('chartabc', {
+        chart: {
+          type: 'line'
+        },
+        exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+          text: 'Test Data'
+        },
+        yAxis: {
+          title: {
+            text: null
+          }
+        },
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: false
+            },
+            enableMouseTracking: false
+          }
+        },
+        series: [{
+          name: 'Real',
+          data: dataR
+        }, {
+          name: 'Predict',
+          data: dataP
+        }]
+      });
 }

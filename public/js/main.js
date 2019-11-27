@@ -2,18 +2,18 @@ $(document).ready(function () {
 
   $.post("/getaverage", (data) => {
     $('.tile_count').html("");
-    console.log("abc");
-    let title = data["index"];
-    let value = data["data"];
+    let per = data[0]
+    let title = data[1]["index"];
+    let value = data[1]["data"];
     let fa  = ["far fa-user", "fas fa-border-style", "fas fa-mobile", "fas fa-laptop"]
     for (i = 0; i < title.length; i++) {
-      if(i == 0)
+      if(per[i].status == "in")
       {
-        $('.tile_count').append('<div class="col-md-3 col-sm-4  tile_stats_count"><span class="count_top"><i class="'+fa[i]+'"></i>' + title[i] + '</span><div class="count">' + value[i].toFixed(0) + '</div></div>')
+        $('.tile_count').append('<div class="col-md-3 col-sm-4  tile_stats_count"><span class="count_top"><i class="'+fa[i]+'" style="padding-right: 5px;"></i>' + title[i] + '</span><div class="count">' + value[i].toFixed(2) + '</div><span class="count_bottom"><i class="green"><i class="fas fa-sort-up"></i>'+per[i].per.toFixed(2)+'%</i> From last week</span></div>')
       }
       else
       {
-      $('.tile_count').append('<div class="col-md-3 col-sm-4  tile_stats_count"><span class="count_top"><i class="'+fa[i]+'"></i>' + title[i] + '</span><div class="count">' + value[i].toFixed(2) + '</div></div>')
+      $('.tile_count').append('<div class="col-md-3 col-sm-4  tile_stats_count"><span class="count_top"><i class="'+fa[i]+'" style="padding-right: 5px;"></i>' + title[i] + '</span><div class="count">' + value[i].toFixed(2) + '</div><span class="count_bottom"><i class="red"><i class="fas fa-sort-down"></i></i>'+per[i].per.toFixed(2)+'%</i> From last week</span></div>')
       }
     }
   })
@@ -27,17 +27,29 @@ $(document).ready(function () {
 
 function show() {
   $.post("/ana" , (data) => {
-    $('#chartabc').html('');
-    console.log(data)
-    data["customers"].forEach(element => {
+    chartabc(data[1], data[2])
+    $('.bg-white .pred').html("");
+    $('.bg-white .x_title h2').html("Result");
+    data[0]["customers"].forEach(element =>{
       var r;
       if (element["vaule"] < 0) {
-        r = "Với mỗi đơn vị tăng của " + element["name"] + " sẽ làm giảm " + element["value"].toFixed(2) * -1 + "$ tổng số tiền khách hàng bỏ ra";
+        r = "1 "+element["unit"]+ " increase in " + element["name"] + " is associated with an decrease of "+element["value"].toFixed(2)+" total dollars spent.";
       } else {
-        r = "Với mỗi đơn vị tăng của " + element["name"] + " sẽ làm tăng " + element["value"].toFixed(2) + "$ tổng số tiền khách hàng bỏ ra";
+        r = "1 "+element["unit"]+ " increase in " + element["name"] + " is associated with an increase of "+element["value"].toFixed(2)+" total dollars spent.";
       }
-      $('#chartabc').append('<div class="kq"><i class="fas fa-angle-right"></i>' + r + '</div>');
+      $('.bg-white .pred').append('<div class="kq"><i class="fas fa-angle-right"></i>' + r + '</div>');
     })
+
+    $('.dashboard_graph .btn-dg').hide();
+    // data["customers"].forEach(element => {
+    //   var r;
+    //   if (element["vaule"] < 0) {
+    //     r = "Với mỗi đơn vị tăng của " + element["name"] + " sẽ làm giảm " + element["value"].toFixed(2) * -1 + "$ tổng số tiền khách hàng bỏ ra";
+    //   } else {
+    //     r = "Với mỗi đơn vị tăng của " + element["name"] + " sẽ làm tăng " + element["value"].toFixed(2) + "$ tổng số tiền khách hàng bỏ ra";
+    //   }
+    //   $('#chartabc').append('<div class="kq"><i class="fas fa-angle-right"></i>' + r + '</div>');
+    // })
   })
 
 }

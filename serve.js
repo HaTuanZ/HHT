@@ -29,6 +29,7 @@ app.post("/ana", function(req, res){
     process.stdout.on('data', function (data) {
         
         fs.readFile('./data/resuilt.json', 'utf8', function (err, d) {
+            var data = []
             if (err) {
                 res.json({
                     error_code: 1,
@@ -37,8 +38,19 @@ app.post("/ana", function(req, res){
                 return;
             }
             var obj = JSON.parse(d);
-            res.send(obj);
+            data.push(obj);
+            let rawdata = fs.readFileSync('./data/y.json');
+            var d = JSON.parse(rawdata);
+            var list = jsontoarray(d['Yearly Amount Spent']);
+            data.push(list);
+            rawdata = fs.readFileSync('./data/predict.json');
+            d = JSON.parse(rawdata);
+            list = jsontoarray(d["0"]);
+            data.push(list);
+
+            res.send(data);
         });
+
     })
 });
 
@@ -47,14 +59,19 @@ app.post("/data",function(req, res){
     let rawdata = fs.readFileSync('./data/data.json');
     let data = JSON.parse(rawdata);
     data = data[req.body.name];
+    list = jsontoarray(data);
+    res.send(list)
+});
+
+function jsontoarray(data){
+    list = []
     let length = Object.keys(data).length;
     for (i = 0; i < length; i++) {
         d = data[Object.keys(data)[i]].toFixed(2)
         list.push(parseFloat(d))
     }
-    res.send(list)
-});
-
+    return list
+}
 
 
 app.post("/getaverage", function(req, res){
@@ -62,6 +79,7 @@ app.post("/getaverage", function(req, res){
 
     process.stdout.on('data', function (data) {
         fs.readFile('./data/mean.json', 'utf8', function (err, d) {
+            sd = []
             if (err) {
                 res.json({
                     error_code: 1,
@@ -69,8 +87,12 @@ app.post("/getaverage", function(req, res){
                 });
                 return;
             }
+            let rawdata = fs.readFileSync('./data/week.json');
+            var c = JSON.parse(rawdata);
+            sd.push(c)
             var obj = JSON.parse(d);
-            res.send(obj);
+            sd.push(obj)
+            res.send(sd);
         });
     })
 });
