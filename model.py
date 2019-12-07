@@ -22,7 +22,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 lm.fit(X_train,y_train)
 
 f =['Avg. Session Length', 'Time on App', 'Time on Website', 'Length of Membership']
-t = ['minute','minute','minute', 'year']
+t = ['đơn vị','đơn vị','đơn vị', 'đơn vị']
 data = {}
 data["customers"] = []
 d = 0
@@ -35,6 +35,20 @@ with open('./data/result.json', 'w') as outfile:
     json.dump(data, outfile)
 
 predictions = lm.predict(X_test)
+
+from sklearn import metrics
+
+# R = []
+# MSE = []
+# r =  metrics.r2_score(y_test, predictions)
+# mse = metrics.mean_squared_error(y_test, predictions)
+# R.append({"R":r})
+# MSE.append({"MSE":mse})
+# with open('./data/r.json', 'w') as outfile:
+#     json.dump(R, outfile)
+# with open('./data/mse.json', 'w') as outfile:
+#     json.dump(MSE, outfile)
+
 predict= pd.DataFrame(predictions)
 
 resI =[]
@@ -46,6 +60,7 @@ y_test = y_test.drop(columns=['index'])
 y_test.to_json(path_or_buf='./data/y.json', orient='columns')
 
 predict.to_json(path_or_buf='./data/predict.json', orient='columns')
+
 
 print(predict)
 print(y_test)

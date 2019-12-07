@@ -66,7 +66,7 @@ function chartxyz(data, title){
 function chartabc(dataR, dataP){
     console.log(dataR)
     console.log(dataP)
-    Highcharts.chart('chartabc', {
+    Highcharts.chart('chartxyz', {
         chart: {
           type: 'line'
         },

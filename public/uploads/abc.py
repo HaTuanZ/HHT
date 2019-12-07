@@ -14,6 +14,10 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
 
+# X_train = pd.concat([X_train,y_train], axis = 1) 
+# X_test = pd.concat([X_test,y_test], axis = 1) 
+# X_train.to_csv('train.csv')
+# X_test.to_csv('test.csv')
 from sklearn.linear_model import LinearRegression
 
 lm = LinearRegression()

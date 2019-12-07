@@ -28,7 +28,7 @@ app.post("/ana", function(req, res){
     var process = spawn('python', ["./model.py"]);
     process.stdout.on('data', function (data) {
         
-        fs.readFile('./data/resuilt.json', 'utf8', function (err, d) {
+        fs.readFile('./data/result.json', 'utf8', function (err, d) {
             var data = []
             if (err) {
                 res.json({
@@ -47,7 +47,12 @@ app.post("/ana", function(req, res){
             d = JSON.parse(rawdata);
             list = jsontoarray(d["0"]);
             data.push(list);
-
+            rawdata = fs.readFileSync('./data/r.json');
+            d = JSON.parse(rawdata);
+            data.push(d);
+            rawdata = fs.readFileSync('./data/mse.json');
+            d = JSON.parse(rawdata);
+            data.push(d);
             res.send(data);
         });
 
