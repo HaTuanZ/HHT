@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import sys 
 import json
+import flask
+
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
 filename = 'EcommerceCustomers.csv'
 
 customers = pd.read_csv ('./public/uploads/' + filename)
@@ -31,23 +35,11 @@ for i in lm.coef_:
     data["customers"].append({"name" : f[d], "value": i, "unit": t[d]})
     d += 1
 
-with open('./data/result.json', 'w') as outfile:
-    json.dump(data, outfile)
 
 predictions = lm.predict(X_test)
 
 from sklearn import metrics
 
-# R = []
-# MSE = []
-# r =  metrics.r2_score(y_test, predictions)
-# mse = metrics.mean_squared_error(y_test, predictions)
-# R.append({"R":r})
-# MSE.append({"MSE":mse})
-# with open('./data/r.json', 'w') as outfile:
-#     json.dump(R, outfile)
-# with open('./data/mse.json', 'w') as outfile:
-#     json.dump(MSE, outfile)
 
 predict= pd.DataFrame(predictions)
 
@@ -57,13 +49,53 @@ for i in range(y_test.size):
 y_test = y_test.reset_index()
 
 y_test = y_test.drop(columns=['index'])
-y_test.to_json(path_or_buf='./data/y.json', orient='columns')
+y_test = y_test.to_json(orient='columns')
 
-predict.to_json(path_or_buf='./data/predict.json', orient='columns')
+predict = predict.to_json(orient='columns')
 
 
-print(predict)
-print(y_test)
+#mean
+
+
+
+def per(A, B):
+    return float(100*(A - B)/A)
+
+
+@app.route('/getresult', methods=['GET'])
+def home():
+    return {"data": data, "y_test": y_test, "predict": predict}
+
+@app.route('/getmean', methods=['GET'])
+def getmean():
+    last = pd.read_csv ('./public/uploads/Lastweek.csv')
+    now = pd.read_csv ('./public/uploads/Now.csv')
+    li = ['Avg. Session Length', 'Time on App', 'Time on Website']
+    last = last[li]
+    now = now[li]
+    liup = ["Total Users Visits"]
+    for k in li:
+        liup.append(k)
+        meanlast = last.mean()
+        meannow = now.mean()
+        totallast = len(last.axes[0])
+        totalnow = len(now.axes[0])
+        ser = pd.Series([totallast], index =["Total Users Visits"])
+        l = ser.append(meanlast)
+        ser = pd.Series([totalnow], index =["Total Users Visits"])
+        n = ser.append(meannow)
+        n.to_json(orient='split')
+    mean = []
+    for key in liup:
+        p = per(l[key], n[key])
+        if(p < 0):
+            p *= -1
+            mean.append({"per" : p, "status": "in"})
+        else:
+            mean.append({"per" : p, "status": "de"})
+    return mean
+app.run()
+
 
 
 

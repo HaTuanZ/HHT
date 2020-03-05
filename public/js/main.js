@@ -29,11 +29,11 @@ function show() {
   $.post("/ana" , (data) => {
     console.log(data)
     $('.httqd').show();
-    chartabc(data[1], data[2])
+    chartabc(data.predict, data.y_test)
     $('.httqd .bg-white .pred').html("");
     $('.httqd .bg-white .x_title h2').html("Result");
     $('.httqd .bg-white .pred').append('<table class="table"><thead><tr><th></th><th>Giá Trị</th><th>Ý Nghĩa</th></tr></thead><tbody>')
-    data[0]["customers"].forEach(element =>{
+    data.data.customers.forEach(element =>{
       var r;
       if (element["vaule"] < 0) {
         r = "Với mỗi  "+element["unit"]+ " tăng lên của " + element["name"] + " sẽ làm giảm "+element["value"].toFixed(2)+" tổng số tiền khách hàng bỏ ra hàng năm";
@@ -42,8 +42,6 @@ function show() {
       }
       $('.httqd .bg-white .pred tbody').append(' <tr><td>'+element["name"]+'</td><td>'+element["value"].toFixed(2)+'</td><td>'+r+'</td></tr>');
     })
-    // $('.httqd .bg-white .pred tbody').append(' <tr><td>R^2</td><td>'+data[3][0]["R"].toFixed(2)+'</td><td>Các yếu tố đầu vào giải thích được '+data[3][0]["R"].toFixed(3)*100+'% giá trị dự đoán</td></tr>')
-    // $('.httqd .bg-white .pred tbody').append(' <tr><td>MSE</td><td>'+data[4][0]["MSE"].toFixed(2)+'</td><td>Trung bình bình phương sai số</td></tr>')
     $('.httqd .bg-white .pred').append('</tbody></table>')
     $('html, body').animate({
       scrollTop: $(".httqd").offset().top

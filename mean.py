@@ -24,22 +24,13 @@ n.to_json(path_or_buf='./data/mean.json', orient='split')
 def per(A, B):
     return float(100*(A - B)/A)
 
-data = []
+mean = []
 for key in liup:
     p = per(l[key], n[key])
     if(p < 0):
         p *= -1
-        data.append({"per" : p, "status": "in"})
+        mean.append({"per" : p, "status": "in"})
     else:
-        data.append({"per" : p, "status": "de"})
-
-with open('./data/week.json', 'w') as outfile:
-    json.dump(data, outfile)
+        mean.append({"per" : p, "status": "de"})
 
 
-
-# ser = pd.Series([total], index =["Total Users"])
-# a = ser.append(mean)
-# a.to_json(path_or_buf='./data/mean.json', orient='split')
-
-print(n)
