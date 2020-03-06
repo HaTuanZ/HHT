@@ -3,6 +3,7 @@ const app = express();
 var bodyParser = require("body-parser");
 const expressLayouts = require('express-ejs-layouts')
 const fs = require('fs');
+
 const {
     spawn
 } = require('child_process')
@@ -17,12 +18,15 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 const server = require('http').Server(app);
-
-server.listen(process.env.PORT || 3000);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}/`);
+  });
 var user = [{
     "username": "admin",
     "password": 123
 }]
+
 
 /** API path that will upload the files */
 
@@ -76,24 +80,24 @@ function jsontoarray(data) {
 
 
 app.post("/getaverage", function (req, res) {
-    var process = spawn('python', ["./mean.py"]);
+    // var process = spawn('python', ["./mean.py"]);
 
-    process.stdout.on('data', function (data) {
-        fs.readFile('./data/mean.json', 'utf8', function (err, d) {
-            sd = []
-            if (err) {
-                res.json({
-                    error_code: 1,
-                    err_desc: err
-                });
-                return;
-            }
-            let rawdata = fs.readFileSync('./data/week.json');
-            var c = JSON.parse(rawdata);
-            sd.push(c)
-            var obj = JSON.parse(d);
-            sd.push(obj)
-            res.send(sd);
-        });
-    })
+    // process.stdout.on('data', function (data) {
+    //     fs.readFile('./data/mean.json', 'utf8', function (err, d) {
+    //         sd = []
+    //         if (err) {
+    //             res.json({
+    //                 error_code: 1,
+    //                 err_desc: err
+    //             });
+    //             return;
+    //         }
+    //         let rawdata = fs.readFileSync('./data/week.json');
+    //         var c = JSON.parse(rawdata);
+    //         sd.push(c)
+    //         var obj = JSON.parse(d);
+    //         sd.push(obj)
+    //         res.send(sd);
+    //     });
+    // })
 });
